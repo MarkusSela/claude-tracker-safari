@@ -1,0 +1,69 @@
+name: Build Safari (macOS + iOS)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  APP_NAME: "Claude Tracker"
+  BUNDLE_ID: "io.github.markussela.aitracker"
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Convert web extension to Safari
+        run: |
+          xcrun safari-web-extension-converter extension \
+            --project-location build \
+            --app-name "$APP_NAME" \
+            --bundle-identifier "$BUNDLE_ID" \
+            --swift --no-open --force
+
+      - name: Inspect generated project
+        run: |
+          ls -la build
+          PROJ="build/$APP_NAME/$APP_NAME.xcodeproj"
+          xcodebuild -list -project "$PROJ"
+
+      - name: Build macOS app (unsigned)
+        run: |
+          PROJ="build/$APP_NAME/$APP_NAME.xcodeproj"
+          xcodebuild build \
+            -project "$PROJ" \
+            -scheme "$APP_NAME (macOS)" \
+            -configuration Release \
+            -derivedDataPath build/dd-macos \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+          APP=$(find build/dd-macos/Build/Products/Release -maxdepth 1 -name "*.app" | head -1)
+          ditto -c -k --keepParent "$APP" ClaudeTracker-macOS.zip
+
+      - name: Build iOS app (unsigned) and package IPA
+        run: |
+          PROJ="build/$APP_NAME/$APP_NAME.xcodeproj"
+          xcodebuild build \
+            -project "$PROJ" \
+            -scheme "$APP_NAME (iOS)" \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build/dd-ios \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+          APP=$(find build/dd-ios/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" | head -1)
+          rm -rf Payload && mkdir Payload
+          cp -R "$APP" Payload/
+          zip -r ClaudeTracker.ipa Payload
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-tracker-build
+          path: |
+            ClaudeTracker.ipa
+            ClaudeTracker-macOS.zip
