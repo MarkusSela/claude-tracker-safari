@@ -1,0 +1,31 @@
+{
+  "name": "Claude Tracker",
+  "identifier": "io.github.markussela.aitracker.source",
+  "sourceURL": "https://markussela.github.io/claude-tracker-safari/source.json",
+  "website": "https://github.com/MarkusSela/claude-tracker-safari",
+  "tintColor": "#D97757",
+  "apps": [
+    {
+      "name": "Claude Tracker",
+      "bundleIdentifier": "io.github.markussela.aitracker",
+      "developerName": "MarkusSela",
+      "subtitle": "Usage bars for Claude, inside Safari.",
+      "localizedDescription": "Adds an inline panel to claude.ai showing your ~token count, cache timer, and session (5h) and weekly (7d) usage bars that fill in real time. No account, no data collection.\n\nAfter installing, enable it in Settings > Apps > Claude Tracker (and in Safari extension settings), then open claude.ai.",
+      "iconURL": "https://raw.githubusercontent.com/MarkusSela/claude-tracker-safari/main/extension/icons/icon256.png",
+      "tintColor": "#D97757",
+      "category": "utilities",
+      "screenshotURLs": [],
+      "versions": [
+        {
+          "version": "0.4.2",
+          "date": "2026-07-01",
+          "localizedDescription": "Initial Safari release.",
+          "downloadURL": "https://github.com/MarkusSela/claude-tracker-safari/releases/latest/download/ClaudeTracker.ipa",
+          "size": 3000000,
+          "minOSVersion": "15.0"
+        }
+      ]
+    }
+  ],
+  "news": []
+}
