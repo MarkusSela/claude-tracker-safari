@@ -17,9 +17,9 @@
       "screenshotURLs": [],
       "versions": [
         {
-          "version": "1.0",
-          "date": "2026-07-01",
-          "localizedDescription": "Initial Safari release.",
+          "version": "1.1",
+          "date": "2026-07-02",
+          "localizedDescription": "Settings panel (gear icon): 7 languages (EN/IT/ZH/JA/RU/PT/AR), bar color presets, stacked layout option. Live author profile + funding goal. Full-width bars on narrow screens by default.",
           "downloadURL": "https://github.com/MarkusSela/claude-tracker-safari/releases/latest/download/ClaudeTracker.ipa",
           "size": 3000000,
           "minOSVersion": "15.0"

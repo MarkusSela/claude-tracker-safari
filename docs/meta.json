@@ -1,0 +1,11 @@
+{
+  "name": "MarkusSela",
+  "avatar": "https://github.com/MarkusSela.png?size=128",
+  "kofi": "https://ko-fi.com/marukoshi",
+  "goal": {
+    "label": "App Store",
+    "target": 99,
+    "current": 0,
+    "currency": "$"
+  }
+}
