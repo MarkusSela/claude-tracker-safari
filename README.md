@@ -5,132 +5,111 @@
 [![Build](https://github.com/MarkusSela/claude-tracker-safari/actions/workflows/build.yml/badge.svg)](https://github.com/MarkusSela/claude-tracker-safari/actions/workflows/build.yml)
 
 A **Safari web extension** that adds an inline usage panel to **claude.ai**,
-for macOS · iOS · iPadOS. It shows your approximate token count, cache timer,
-and **session (5h)** and **weekly (7d)** usage bars that fill in real time —
-right inside the Claude page. No account, no data collection.
+for macOS · iOS · iPadOS. Live token count, cache timer, and **session (5h)**
+and **weekly (7d)** usage bars — right inside the Claude page. No account, no
+data collection.
 
 Ported from the Firefox/Chrome extension "Claude Counter" (Manifest V3).
 
-- **Display name:** Claude Tracker
-- **Bundle ID:** `io.github.markussela.aitracker` *(permanent — never change it)*
+| iPhone | Mac |
+|---|---|
+| ![iOS screenshot](docs/screenshots/ios.png) | ![macOS screenshot](docs/screenshots/macos.png) |
 
----
+## Features
 
-## For users
+- **Live usage bars** — session (5h) and weekly (7d) quota, updating in real
+  time as you chat. No page refresh needed; tap the row to force a refresh.
+- **Time marker** — the vertical line inside each bar shows where you are *in
+  time* within the window. Fill ahead of the line = you're burning quota
+  faster than the window elapses.
+- **Token counter** — approximate conversation tokens + prompt-cache countdown.
+- **Settings panel** (⚙ gear next to the bars):
+  - **7 languages** — English, Italiano, 中文, 日本語, Русский, Português,
+    العربية (auto-detected, switchable)
+  - **Bar colors** — Blue, Claude, Green, Purple
+  - **Layout** — Inline, Stacked (full-width bars), or Auto (stacked on
+    narrow screens)
+- **Live author card** — the panel header (profile, Ko-fi link, funding goal)
+  is fetched from this repo's `meta.json`, so it never goes stale inside the
+  app.
+- **Theme-aware** — follows claude.ai light/dark mode.
+
+Both the iOS/iPadOS app and the macOS app are built from the **same extension
+source**, so every feature above ships on all platforms with each release.
+
+## Install
 
 ### iPhone / iPad — via SideStore
 
 1. Install [SideStore](https://sidestore.io) (one-time PC setup, free Apple ID).
-2. In SideStore → **Sources → ＋** → add:
+2. SideStore → **Sources → ＋** → add:
    `https://markussela.github.io/claude-tracker-safari/source.json`
-3. Open the source and install **Claude Tracker**.
-4. **Settings → Apps → Claude Tracker** → enable it, then turn it on in Safari's
+3. Install **Claude Tracker** from the source.
+4. **Settings → Apps → Claude Tracker** → enable, then enable it in Safari's
    extension settings.
-5. Open **claude.ai** in Safari — the panel appears in the chat.
+5. Open **claude.ai** in Safari.
 
-> The same IPA works on both iPhone and iPad (universal build).
+> **Note on App IDs:** the app registers **two App IDs** (the app itself + the
+> Safari extension). With a free Apple ID, SideStore allows 10 App IDs per
+> week — installing Claude Tracker uses 2 of them. Both must register for the
+> extension to work correctly.
 >
-> Free Apple ID certificates expire after 7 days; SideStore auto-refreshes in
-> the background, so keep SideStore installed and refreshed.
+> The same IPA is universal (iPhone + iPad). Free-account certificates expire
+> after 7 days; SideStore auto-refreshes in the background.
 
 ### Mac — unsigned, no App Store
 
 1. Download `ClaudeTracker-macOS.zip` from [Releases](../../releases/latest),
-   unzip, move the app to Applications, and open it once.
+   unzip, move the app to Applications, open it once.
 2. Safari → **Settings → Advanced → Show features for web developers**.
 3. Safari → **Develop → Allow Unsigned Extensions**.
 4. Safari → **Settings → Extensions** → enable **Claude Tracker**.
 5. Open **claude.ai**.
 
-> "Allow Unsigned Extensions" resets when Safari restarts. To make it permanent,
-> the app has to be notarized (Apple Developer Program) or shipped via the
-> App Store.
-
----
+> "Allow Unsigned Extensions" resets when Safari restarts — a notarized /
+> App Store build (see the goal below) removes that friction permanently.
 
 ## Build it yourself (no Mac required)
 
-Building for Safari/iOS needs macOS + Xcode. This repo does it on a **GitHub
-Actions macOS runner** — free on public repos, no local Mac needed.
+CI builds everything on a GitHub Actions macOS runner — free on public repos.
 
-1. Push this repo to GitHub (public).
-2. **Settings → Actions** → allow workflows.
-3. **Settings → Pages** → deploy from branch `main`, folder `/docs`
-   (this serves `source.json`).
-4. The workflow (`.github/workflows/build.yml`) runs on every push and produces
-   `ClaudeTracker.ipa` + `ClaudeTracker-macOS.zip` as artifacts.
-5. To publish a downloadable release that the SideStore source points at:
-   create a release with tag `v0.4.2` and attach `ClaudeTracker.ipa`
-   (keep the filename exact).
+1. Fork/push this repo (public) → **Settings → Actions** → allow workflows.
+2. **Settings → Pages** → deploy branch `main`, folder `/docs` (serves
+   `source.json` + `meta.json`).
+3. Every push builds `ClaudeTracker.ipa` + `ClaudeTracker-macOS.zip` as
+   artifacts. Attach the IPA (exact filename) to a release so the SideStore
+   source can download it.
 
-Have a Mac in hand instead? Run `scripts/build-safari.sh`.
+Have a real Mac? `scripts/build-safari.sh`.
 
----
+## Roadmap
 
-## Known risk (verify on device)
-
-The extension wraps `fetch` in the page context (`src/injected/bridge.js`) to
-read Claude's SSE `message_limit` events. This pattern works in Firefox/Chrome
-and *should* work in Safari — content-script injection and
-`web_accessible_resources` are supported, and the extension has **no background
-service worker** (the part iOS Safari restricts). But SSE interception through
-Safari's content-script sandbox can only be fully confirmed by running it on a
-real device. If the bars don't fill, that's where to look.
-
----
-
-## Renaming / adding other AIs later
-
-- The **display name** ("Claude Tracker") can change anytime with zero
-  consequences — edit `--app-name` in the workflow and `name` in
-  `extension/manifest.json`.
-- The **bundle ID** is the permanent identity used for updates. Changing it =
-  a brand-new app (lost updates/reviews). It's deliberately generic
-  (`aitracker`) so it survives a future multi-AI rename.
-- **App Store note:** "Claude" in the app *name* may be rejected (trademark).
-  For the App Store, use a neutral name (e.g. "AI Usage Tracker") with
-  "for Claude" in the subtitle. Sideloading has no such restriction.
-
-Adding another AI = a new site in `content_scripts.matches` plus a per-site
-adapter. Each provider exposes usage differently; some don't expose it at all.
-
-### Roadmap: other AI providers
-
-Claude exposes its usage cleanly (native session/weekly limits over SSE), which
-is what makes these bars possible. In the future, if there's interest, I'd like
-to extend Claude Tracker to **other AI chat services whose token usage isn't
-clearly visible** — the ones that don't surface how much of your quota you've
-burned. Those need per-provider reverse-engineering, and some may not be
-feasible at all, but the generic (`aitracker`) identity is built to grow into a
-multi-AI usage tracker without breaking anything. If a provider you use matters
-to you, open an issue.
-
----
+- **More AI providers** — extend the tracker to AI chat services whose token
+  usage isn't clearly visible. Each provider needs its own adapter (and some
+  may not be feasible); the generic bundle ID (`aitracker`) is built for this.
+  Want one? Open an issue.
+- **Home-screen widget (iOS)** — last-known usage + live reset countdown via
+  WidgetKit, fed by the extension through native messaging.
+- **Alternate app icons** and small supporter perks.
+- **App Store / TestFlight release** — see the goal below.
 
 ## Support ☕
 
-Claude Tracker is free and open source, and it'll stay that way. If it's saved
-you from hitting a limit mid-conversation, consider buying me a coffee.
+Claude Tracker is free and open source, and it'll stay that way.
 
-Funds go toward the **Apple Developer Program ($99/yr)** — that's what unlocks a
-proper **App Store / TestFlight** release, so anyone can install with one tap
-instead of setting up SideStore.
+**🎯 Current goal — Apple Developer Program ($99/yr):** unlocks App Store /
+TestFlight distribution: one-tap installs, automatic updates, no SideStore, no
+7-day certificates, for everyone. Progress is shown live inside the app's
+settings panel.
 
 [![Buy me a coffee on Ko-fi](https://img.shields.io/badge/Buy%20me%20a%20coffee-Ko--fi-FF5E5B?logo=ko-fi&logoColor=white&style=for-the-badge)](https://ko-fi.com/marukoshi)
 
-**🎯 Current goal — Apple Developer Program ($99/yr):** one-tap installs via
-App Store / TestFlight, no SideStore setup for anyone.
-**Stretch goal:** support for more AI providers whose usage isn't clearly
-visible.
-
 Every coffee gets us closer. Grazie 🙏
-
----
 
 ## Credits & license
 
 Ported and maintained by [MarkusSela](https://github.com/MarkusSela).
-Based on the original "Claude Counter" web extension. See [LICENSE](LICENSE);
-the original work retains its own license.
+Based on the original "Claude Counter" web extension (MIT). See
+[LICENSE](LICENSE).
 
 Not affiliated with Anthropic. "Claude" is a trademark of Anthropic.
