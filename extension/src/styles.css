@@ -136,3 +136,175 @@
 .cc-hidden {
 	display: none !important;
 }
+
+/* ===== Claude Tracker additions (v1.1) ===== */
+
+/* Stacked layout: each bar on its own full-width row */
+.cc-usageRow--stacked {
+	flex-direction: column;
+	align-items: stretch;
+	gap: 6px;
+}
+
+.cc-usageRow--stacked .cc-usageGroup {
+	width: 100%;
+}
+
+.cc-usageRow--stacked .cc-usageGroup--weekly {
+	flex-direction: row-reverse;
+	justify-content: flex-start;
+}
+
+/* Settings gear */
+.cc-gearBtn {
+	flex: none;
+	background: none;
+	border: none;
+	padding: 0 2px;
+	font-size: 14px;
+	line-height: 1;
+	color: inherit;
+	opacity: 0.65;
+	cursor: pointer;
+}
+
+.cc-gearBtn:hover { opacity: 1; }
+
+.cc-usageRow--stacked .cc-gearBtn {
+	position: absolute;
+	right: 0;
+	top: -18px;
+}
+
+.cc-usageRow--stacked { position: relative; }
+
+@keyframes cc-pulse {
+	0%, 100% { opacity: 0.65; transform: scale(1); }
+	50% { opacity: 1; transform: scale(1.25); }
+}
+
+.cc-gearBtn--pulse { animation: cc-pulse 1.6s ease-in-out infinite; }
+
+/* Settings panel — dark GitHub-style, independent from page theme */
+.cc-set__overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 99999;
+	background: rgba(0, 0, 0, 0.55);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+}
+
+.cc-set__card {
+	width: 100%;
+	max-width: 380px;
+	max-height: 85vh;
+	overflow-y: auto;
+	background: #0d1117;
+	color: #e6edf3;
+	border: 1px solid #30363d;
+	border-radius: 12px;
+	padding: 16px;
+	font-size: 13px;
+	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
+.cc-set__head {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.cc-set__avatar {
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	border: 1px solid #30363d;
+}
+
+.cc-set__title { font-size: 15px; font-weight: 600; }
+.cc-set__author { color: #8b949e; font-size: 12px; }
+
+.cc-set__kofi {
+	display: block;
+	text-align: center;
+	background: #ff5e5b;
+	color: #fff !important;
+	text-decoration: none;
+	border-radius: 8px;
+	padding: 8px 12px;
+	font-weight: 600;
+	margin-bottom: 10px;
+}
+
+.cc-set__kofi:hover { filter: brightness(1.08); }
+
+.cc-set__goal { margin-bottom: 4px; }
+.cc-set__goalText { color: #8b949e; font-size: 12px; margin-bottom: 4px; }
+
+.cc-set__goalBar {
+	height: 8px;
+	border-radius: 4px;
+	background: #21262d;
+	border: 1px solid #30363d;
+	overflow: hidden;
+}
+
+.cc-set__goalFill {
+	height: 100%;
+	background: #ff5e5b;
+	transition: width 300ms ease;
+}
+
+.cc-set__divider {
+	height: 1px;
+	background: #30363d;
+	margin: 12px 0;
+}
+
+.cc-set__row { margin-bottom: 12px; }
+.cc-set__label { color: #8b949e; margin-bottom: 6px; font-size: 12px; }
+
+.cc-set__seg { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.cc-set__segBtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	background: #21262d;
+	color: #e6edf3;
+	border: 1px solid #30363d;
+	border-radius: 6px;
+	padding: 5px 10px;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.cc-set__segBtn--on {
+	background: #1f6feb;
+	border-color: #1f6feb;
+	color: #fff;
+}
+
+.cc-set__dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.cc-set__close {
+	width: 100%;
+	background: #21262d;
+	color: #e6edf3;
+	border: 1px solid #30363d;
+	border-radius: 8px;
+	padding: 8px;
+	cursor: pointer;
+	margin-top: 4px;
+}
+
+.cc-set__close:hover { background: #30363d; }
