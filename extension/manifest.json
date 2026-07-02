@@ -42,6 +42,7 @@
       ],
       "js": [
         "src/content/constants.js",
+        "src/content/settings.js",
         "src/content/bridge-client.js",
         "src/vendor/o200k_base.js",
         "src/content/tokens.js",
@@ -53,7 +54,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "src/injected/bridge.js"
+        "src/injected/bridge.js",
+        "icons/icon128.png"
       ],
       "matches": [
         "https://claude.ai/*"
