@@ -69,6 +69,21 @@ source**, so every feature above ships on all platforms with each release.
 > "Allow Unsigned Extensions" resets when Safari restarts — a notarized /
 > App Store build (see the goal below) removes that friction permanently.
 
+### Chrome / Edge / Brave / Firefox
+
+Same extension, same features, packaged for desktop browsers:
+
+- **Chrome & Brave** — install from the Chrome Web Store *(listing coming
+  soon)*. Brave installs Chrome extensions natively.
+- **Edge** — Edge Add-ons store *(coming soon)*, or install the Chrome
+  listing directly.
+- **Firefox** — Firefox Add-ons (AMO) *(coming soon)*.
+
+Until store listings are live, grab `claude-tracker-chromium.zip` /
+`claude-tracker-firefox.zip` from [Releases](../../releases/latest) and load
+manually (`chrome://extensions` → Developer mode → Load unpacked, or
+`about:debugging` → Load Temporary Add-on in Firefox).
+
 ## Build it yourself (no Mac required)
 
 CI builds everything on a GitHub Actions macOS runner — free on public repos.
