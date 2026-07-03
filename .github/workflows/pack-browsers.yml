@@ -1,0 +1,23 @@
+name: Pack browser extensions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "extension/**"
+      - "scripts/pack-browsers.sh"
+      - ".github/workflows/pack-browsers.yml"
+  workflow_dispatch:
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pack Chromium + Firefox zips
+        run: bash scripts/pack-browsers.sh
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-packs
+          path: dist/*.zip
