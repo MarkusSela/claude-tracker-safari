@@ -1,4 +1,4 @@
-name: Pack browser extensions
+name: Pack browser + desktop builds
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
     paths:
       - "extension/**"
       - "scripts/pack-browsers.sh"
+      - "desktop-inject/**"
       - ".github/workflows/pack-browsers.yml"
   workflow_dispatch:
 
@@ -16,8 +17,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Pack Chromium + Firefox zips
         run: bash scripts/pack-browsers.sh
+      - name: Build Claude Desktop (Linux) inject kit
+        run: |
+          bash desktop-inject/build-bundle.sh
+          zip -rq dist/claude-tracker-desktop-inject.zip desktop-inject
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: browser-packs
+          name: browser-and-desktop-packs
           path: dist/*.zip
