@@ -1,15 +1,17 @@
-# Claude Tracker — Safari Extension for claude.ai
+# Claude Tracker — usage bars for claude.ai, everywhere
 
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/marukoshi)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-MarkusSela-EA4AAA?logo=github-sponsors&logoColor=white)](https://github.com/sponsors/MarkusSela)
 [![Build](https://github.com/MarkusSela/claude-tracker-safari/actions/workflows/build.yml/badge.svg)](https://github.com/MarkusSela/claude-tracker-safari/actions/workflows/build.yml)
 
-A **Safari web extension** that adds an inline usage panel to **claude.ai**,
-for macOS · iOS · iPadOS. Live token count, cache timer, and **session (5h)**
-and **weekly (7d)** usage bars — right inside the Claude page. No account, no
-data collection.
+A browser extension that adds a live usage panel to **claude.ai**: token
+count, cache timer, and **session (5h)** / **weekly (7d)** usage bars, right
+inside the chat. No account, no data collection, open source.
 
-Ported from the Firefox/Chrome extension "Claude Counter" (Manifest V3).
+**Platforms:** Safari (iOS · iPadOS · macOS) · Chrome · Brave · Edge ·
+Firefox (desktop + Android) · Claude Desktop on Linux (experimental).
+
+Ported and extended from the Firefox/Chrome extension "Claude Counter" (MIT).
 
 | iPhone | Mac |
 |---|---|
@@ -18,113 +20,104 @@ Ported from the Firefox/Chrome extension "Claude Counter" (Manifest V3).
 ## Features
 
 - **Live usage bars** — session (5h) and weekly (7d) quota, updating in real
-  time as you chat. No page refresh needed; tap the row to force a refresh.
+  time as you chat. Tap the row to force a refresh.
 - **Time marker** — the vertical line inside each bar shows where you are *in
-  time* within the window. Fill ahead of the line = you're burning quota
-  faster than the window elapses.
+  time* within the window. Fill ahead of the line = burning quota faster than
+  the window resets.
 - **Token counter** — approximate conversation tokens + prompt-cache countdown.
-- **Settings panel** (⚙ gear next to the bars):
-  - **7 languages** — English, Italiano, 中文, 日本語, Русский, Português,
-    العربية (auto-detected, switchable)
-  - **Bar colors** — Blue, Claude, Green, Purple
-  - **Layout** — Inline, Stacked (full-width bars), or Auto (stacked on
-    narrow screens)
-- **Live author card** — the panel header (profile, Ko-fi link, funding goal)
-  is fetched from this repo's `meta.json`, so it never goes stale inside the
-  app.
+- **Settings panel** (⚙ gear): **7 languages** (EN · IT · 中文 · 日本語 ·
+  Русский · Português · العربية), bar color presets, inline/stacked layout.
+- **Live author card** — profile + funding goal fetched from this repo's
+  `meta.json`, never stale inside the app.
 - **Theme-aware** — follows claude.ai light/dark mode.
 
-Both the iOS/iPadOS app and the macOS app are built from the **same extension
-source**, so every feature above ships on all platforms with each release.
+All platforms build from the same extension source — every feature ships
+everywhere.
 
 ## Install
 
 ### iPhone / iPad — via SideStore
 
 1. Install [SideStore](https://sidestore.io) (one-time PC setup, free Apple ID).
-2. SideStore → **Sources → ＋** → add:
+2. SideStore → **Sources → ＋** →
    `https://markussela.github.io/claude-tracker-safari/source.json`
-3. Install **Claude Tracker** from the source.
-4. **Settings → Apps → Claude Tracker** → enable, then enable it in Safari's
-   extension settings.
-5. Open **claude.ai** in Safari.
+3. Install **Claude Tracker**, enable it in **Settings → Apps** and in
+   Safari's extension settings, then open **claude.ai**.
 
-> **Note on App IDs:** the app registers **two App IDs** (the app itself + the
-> Safari extension). With a free Apple ID, SideStore allows 10 App IDs per
-> week — installing Claude Tracker uses 2 of them. Both must register for the
-> extension to work correctly.
->
-> The same IPA is universal (iPhone + iPad). Free-account certificates expire
-> after 7 days; SideStore auto-refreshes in the background.
+> Registers **two App IDs** (app + extension) — both required. Free-account
+> certs expire after 7 days; SideStore auto-refreshes.
 
-### Mac — unsigned, no App Store
+### Mac (Safari)
 
 1. Download `ClaudeTracker-macOS.zip` from [Releases](../../releases/latest),
-   unzip, move the app to Applications, open it once.
-2. Safari → **Settings → Advanced → Show features for web developers**.
-3. Safari → **Develop → Allow Unsigned Extensions**.
-4. Safari → **Settings → Extensions** → enable **Claude Tracker**.
-5. Open **claude.ai**.
+   unzip, move to Applications, open once.
+2. Safari → Settings → Advanced → **Show features for web developers**.
+3. Safari → Develop → **Allow Unsigned Extensions** (resets on Safari restart).
+4. Safari → Settings → Extensions → enable, then open **claude.ai**.
 
-> "Allow Unsigned Extensions" resets when Safari restarts — a notarized /
-> App Store build (see the goal below) removes that friction permanently.
+### Chrome / Brave / Edge
 
-### Chrome / Edge / Brave / Firefox
+Store listing not live yet. Manual load:
 
-Same extension, same features, packaged for desktop browsers:
+1. Grab `claude-tracker-chromium.zip` from [Releases](../../releases/latest)
+   (or the *Pack browser + desktop builds* workflow artifacts), unzip.
+2. `chrome://extensions` → **Developer mode** → **Load unpacked** → select the
+   unzipped folder (the one containing `manifest.json`).
 
-- **Chrome & Brave** — install from the Chrome Web Store *(listing coming
-  soon)*. Brave installs Chrome extensions natively.
-- **Edge** — Edge Add-ons store *(coming soon)*, or install the Chrome
-  listing directly.
-- **Firefox** — Firefox Add-ons (AMO) *(coming soon)*.
+### Firefox (desktop + Android)
 
-Until store listings are live, grab `claude-tracker-chromium.zip` /
-`claude-tracker-firefox.zip` from [Releases](../../releases/latest) and load
-manually (`chrome://extensions` → Developer mode → Load unpacked, or
-`about:debugging` → Load Temporary Add-on in Firefox).
+Submitted to Firefox Add-ons (AMO) — under review. Once live, one-click
+install on desktop **and Android Firefox**. Meanwhile: `about:debugging` →
+**Load Temporary Add-on** → pick `manifest.json` from
+`claude-tracker-firefox.zip`.
 
-## Build it yourself (no Mac required)
+### Claude Desktop on Linux — experimental
 
-CI builds everything on a GitHub Actions macOS runner — free on public repos.
+For [claude-desktop-debian](https://github.com/aaddrick/claude-desktop-debian)
+installs. Injects the tracker into the Electron app without touching
+`app.asar` or the launcher (drops a wrapper at Electron's `resources/app/`,
+which loads before the asar).
 
-1. Fork/push this repo (public) → **Settings → Actions** → allow workflows.
-2. **Settings → Pages** → deploy branch `main`, folder `/docs` (serves
-   `source.json` + `meta.json`).
-3. Every push builds `ClaudeTracker.ipa` + `ClaudeTracker-macOS.zip` as
-   artifacts. Attach the IPA (exact filename) to a release so the SideStore
-   source can download it.
+```bash
+unzip claude-tracker-desktop-inject.zip
+cd claude-tracker-safari/desktop-inject
+sudo bash install.sh      # sudo bash uninstall.sh to remove
+```
 
-Have a real Mac? `scripts/build-safari.sh`.
+> **Status: experimental / unverified.** Injection works; whether the bars
+> attach depends on Claude Desktop's internal app matching claude.ai's DOM
+> and SSE events. Reports welcome via issues.
+
+## Build it yourself
+
+- **Safari (iOS + macOS):** GitHub Actions macOS runner —
+  `.github/workflows/build.yml`. No Mac needed. Local: `scripts/build-safari.sh`.
+- **Browser zips + desktop kit:** `.github/workflows/pack-browsers.yml`, or
+  locally `scripts/pack-browsers.sh` and `desktop-inject/build-bundle.sh`.
+- GitHub Pages (branch `main`, folder `/docs`) serves `source.json` (SideStore)
+  and `meta.json` (live author card).
 
 ## Roadmap
 
-- **More AI providers** — extend the tracker to AI chat services whose token
-  usage isn't clearly visible. Each provider needs its own adapter (and some
-  may not be feasible); the generic bundle ID (`aitracker`) is built for this.
-  Want one? Open an issue.
-- **Home-screen widget (iOS)** — last-known usage + live reset countdown via
-  WidgetKit, fed by the extension through native messaging.
-- **Alternate app icons** and small supporter perks.
-- **App Store / TestFlight release** — see the goal below.
+- **More AI providers** — trackers for AI chats whose usage isn't clearly
+  visible. Per-provider adapters; the generic bundle ID (`aitracker`) is built
+  for this. Want one? Open an issue.
+- **iOS home-screen widget** — last-known usage + live reset countdown
+  (WidgetKit + native messaging).
+- Store listings: Chrome Web Store, Edge Add-ons, AMO approval.
+- Alternate app icons, small supporter perks.
 
 ## Support ☕
 
-Claude Tracker is free and open source, and it'll stay that way.
-
-**🎯 Current goal — Apple Developer Program ($99/yr):** unlocks App Store /
-TestFlight distribution: one-tap installs, automatic updates, no SideStore, no
-7-day certificates, for everyone. Progress is shown live inside the app's
-settings panel.
+**🎯 Goal — Apple Developer Program ($99/yr):** App Store / TestFlight
+release: one-tap installs, auto-updates, no SideStore, no 7-day certs.
+Progress shown live in the app's settings panel.
 
 [![Buy me a coffee on Ko-fi](https://img.shields.io/badge/Buy%20me%20a%20coffee-Ko--fi-FF5E5B?logo=ko-fi&logoColor=white&style=for-the-badge)](https://ko-fi.com/marukoshi)
 
-Every coffee gets us closer. Grazie 🙏
+## Privacy · Credits · License
 
-## Credits & license
-
-Ported and maintained by [MarkusSela](https://github.com/MarkusSela).
-Based on the original "Claude Counter" web extension (MIT). See
-[LICENSE](LICENSE).
-
-Not affiliated with Anthropic. "Claude" is a trademark of Anthropic.
+No data collected — see [PRIVACY.md](PRIVACY.md). Ported and maintained by
+[MarkusSela](https://github.com/MarkusSela); based on "Claude Counter" (MIT),
+see [LICENSE](LICENSE). Not affiliated with Anthropic — "Claude" is a
+trademark of Anthropic.
